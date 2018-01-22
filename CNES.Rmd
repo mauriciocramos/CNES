@@ -43,13 +43,16 @@ mapData <- estabelecimento %>%
   #filter(TP_ESTAB_SEMPRE_ABERTO=="S") %>%
   mutate(lng=as.numeric(NU_LONGITUDE), lat=as.numeric(NU_LATITUDE)) %>%
   filter(between(lat, south, north) & between(lng, west, east)) %>%
-  mutate(popup=paste0(ifelse(NO_URL!="",paste0("<a href='http://",sub("http://","",NO_URL),"'>",NO_FANTASIA,"</a>"),NO_FANTASIA),"</br>",
+  mutate(NO_URL = ifelse(NO_URL!="", paste0("http://", sub("http://", "",NO_URL)), "")) %>%
+  mutate(popup=paste0(ifelse(NO_URL=="",
+                             paste0("<b>",NO_FANTASIA,"</b>"),
+                             paste0("<a href='",NO_URL,"'>",NO_FANTASIA,"</a>")),"</br>",
                       NO_RAZAO_SOCIAL,"</br>",
-                      paste(NO_LOGRADOURO,NU_ENDERECO,NO_COMPLEMENTO,NO_BAIRRO), "</br>",
+                      paste(NO_LOGRADOURO,NU_ENDERECO,NO_COMPLEMENTO,NO_BAIRRO),"</br>",
                       "Zip:", CO_CEP,"</br>",
                       "Phone: ", NU_TELEFONE,"</br>",
                       "Email: ", NO_EMAIL,"</br>",
-                      "Site:", NO_URL,"</br>",
+                      "Site: ", "<a href='",NO_URL,"'>",NO_URL,"</a>","</br>",
                       "Lat:", NU_LATITUDE, " Lng:", NU_LONGITUDE)) %>%
   select(lng, lat, popup)
 ```
