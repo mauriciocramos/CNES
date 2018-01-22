@@ -1,5 +1,5 @@
 ---
-title: "CNES - Brazilian National Register of Health Establishments"
+title: "CNES - Brazilian Health Establishments"
 author: "Mauricio Collaça"
 date: "January 22, 2018"
 output: html_document
@@ -15,39 +15,6 @@ library(data.table); library(leaflet); library(dplyr)
 ```{r, cache=TRUE}
 estabelecimento <- fread("./data/tbEstabelecimento201712.csv", stringsAsFactors = FALSE, data.table=FALSE, verbose = FALSE, showProgress = FALSE)
 ```
-
-<!-- TP_PFPJ (1-FISICA, 3-JURIDICA) -->
-<!-- NIVEL_DEP (1-INDIVIDUAL, 3-MANTIDO) -->
-<!-- NO_RAZAO_SOCIAL -->
-<!-- NO_FANTASIA -->
-<!-- NO_LOGRADOURO -->
-<!-- NU_ENDERECO -->
-<!-- NO_COMPLEMENTO -->
-<!-- NO_BAIRRO -->
-<!-- CO_CEP -->
-<!-- NU_TELEFONE -->
-<!-- NO_EMAIL -->
-<!-- NU_CPF -->
-<!-- NU_CNPJ -->
-<!-- DT_EXPEDICAO -->
-<!-- TP_ORGAO_EXPEDIDOR (1-SES, 2-SMS) -->
-<!-- DT_VAL_LIC_SANI -->
-<!-- TP_UNIDADE (TB_TIPO_UNIDADE) -->
-<!-- CO_ESTADO_GESTOR -->
-<!-- CO_MUNICIPIO_GESTOR (TB_MUNICIPIO) -->
-<!-- DT_ATUALIZACAO -->
-<!-- CO_CPFDIRETORCLN -->
-<!-- REG_DIRETORCLN -->
-<!-- ST_ADESAO_ FILANTROP (1-SIM, 2-NAO) -->
-<!-- CO_MOTIVO_DESAB (TB_MOTIVO_DESATIVACAO) -->
-<!-- NO_URL -->
-<!-- NU_LATITUDE -->
-<!-- NU_LONGITUDE -->
-<!-- DT_ATU_GEO -->
-<!-- CO_NATUREZA_JUR (TB_NATUREZA_JURIDICA) -->
-<!-- TP_ESTAB_SEMPRE_ABERTO (S-SIM, N-NAO) -->
-<!-- ST_GERACREDITO_GERENTE_SGIF (S-SIM, N-NAO) -->
-<!-- TP_GESTAO (M-MUNICIPAL, E-ESTADUAL, D-DUPLA, S-SEM GESTAO) -->
 
 ```{r eval=FALSE}
 tipoUnidade <- fread("./data/tbTipoUnidade201712.csv", stringsAsFactors = FALSE, data.table=FALSE)
@@ -67,10 +34,7 @@ naturezaJuridica <- fread("./data/tbNaturezaJuridica201712.csv", stringsAsFactor
 
 ---
 
-## Geo-referenced health establishments
-
 Click on circles to zoom in clusters
-
 ```{r}
 north <- 5+16/60
 south <- -33+45/60
