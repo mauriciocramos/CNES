@@ -1,0 +1,105 @@
+---
+title: "CNES - Brazilian National Register of Health Establishments"
+author: "Mauricio Collaça"
+date: "January 22, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r include=FALSE}
+library(data.table); library(leaflet); library(dplyr)
+```
+```{r, cache=TRUE}
+estabelecimento <- fread("./data/tbEstabelecimento201712.csv", stringsAsFactors = FALSE, data.table=FALSE, verbose = FALSE, showProgress = FALSE)
+```
+
+<!-- TP_PFPJ (1-FISICA, 3-JURIDICA) -->
+<!-- NIVEL_DEP (1-INDIVIDUAL, 3-MANTIDO) -->
+<!-- NO_RAZAO_SOCIAL -->
+<!-- NO_FANTASIA -->
+<!-- NO_LOGRADOURO -->
+<!-- NU_ENDERECO -->
+<!-- NO_COMPLEMENTO -->
+<!-- NO_BAIRRO -->
+<!-- CO_CEP -->
+<!-- NU_TELEFONE -->
+<!-- NO_EMAIL -->
+<!-- NU_CPF -->
+<!-- NU_CNPJ -->
+<!-- DT_EXPEDICAO -->
+<!-- TP_ORGAO_EXPEDIDOR (1-SES, 2-SMS) -->
+<!-- DT_VAL_LIC_SANI -->
+<!-- TP_UNIDADE (TB_TIPO_UNIDADE) -->
+<!-- CO_ESTADO_GESTOR -->
+<!-- CO_MUNICIPIO_GESTOR (TB_MUNICIPIO) -->
+<!-- DT_ATUALIZACAO -->
+<!-- CO_CPFDIRETORCLN -->
+<!-- REG_DIRETORCLN -->
+<!-- ST_ADESAO_ FILANTROP (1-SIM, 2-NAO) -->
+<!-- CO_MOTIVO_DESAB (TB_MOTIVO_DESATIVACAO) -->
+<!-- NO_URL -->
+<!-- NU_LATITUDE -->
+<!-- NU_LONGITUDE -->
+<!-- DT_ATU_GEO -->
+<!-- CO_NATUREZA_JUR (TB_NATUREZA_JURIDICA) -->
+<!-- TP_ESTAB_SEMPRE_ABERTO (S-SIM, N-NAO) -->
+<!-- ST_GERACREDITO_GERENTE_SGIF (S-SIM, N-NAO) -->
+<!-- TP_GESTAO (M-MUNICIPAL, E-ESTADUAL, D-DUPLA, S-SEM GESTAO) -->
+
+```{r eval=FALSE}
+tipoUnidade <- fread("./data/tbTipoUnidade201712.csv", stringsAsFactors = FALSE, data.table=FALSE)
+```
+
+```{r eval=FALSE}
+municipio <- fread("./data/tbMunicipio201712.csv", stringsAsFactors = FALSE, data.table=FALSE)
+```
+
+```{r eval=FALSE}
+motivoDesativacao <- fread("./data/tbMotivoDesativacao201712.csv", stringsAsFactors = FALSE, data.table=FALSE)
+```
+
+```{r eval=FALSE}
+naturezaJuridica <- fread("./data/tbNaturezaJuridica201712.csv", stringsAsFactors = FALSE, data.table=FALSE)
+```
+
+---
+
+## Geo-referenced health establishments
+
+Click on circles to zoom in clusters
+
+```{r, cache=TRUE}
+north <- 5+16/60
+south <- -33+45/60
+east <- -28+50/60
+west <- -73+59/60
+mapData <- estabelecimento %>%
+  filter(NU_LONGITUDE !="" & NU_LATITUDE!="") %>%
+  filter(CO_MOTIVO_DESAB=="") %>%
+  #filter(TP_PFPJ == "3") %>%
+  #filter(TP_ESTAB_SEMPRE_ABERTO=="S") %>%
+  #slice(1:100) %>%
+  mutate(lng=as.numeric(NU_LONGITUDE), lat=as.numeric(NU_LATITUDE)) %>%
+  filter(between(lat, south, north) & between(lng, west, east)) %>%
+  mutate(popup=paste0("<a href='",NO_URL,"'>",NO_FANTASIA,"</a>","</br>",
+                      NO_RAZAO_SOCIAL,"</br>",
+                      paste(NO_LOGRADOURO,NU_ENDERECO,NO_COMPLEMENTO,NO_BAIRRO), "</br>",
+                      "Zip:", CO_CEP,"</br>",
+                      "Phone: ", NU_TELEFONE,"</br>",
+                      "Email: ", NO_EMAIL,"</br>",
+                      "Site:", NO_URL,"</br>",
+                      "Lat:", NU_LATITUDE, " Lng:", NU_LONGITUDE)) %>%
+  select(lng, lat, popup)
+```
+
+```{r}
+mapData %>%
+  leaflet(width=1024, height=768) %>%
+  addTiles() %>%
+  addMarkers(lng = ~lng, lat = ~lat, popup = ~popup, clusterOptions = markerClusterOptions())
+```
+
+Source: [Datasus](http://cnes.datasus.gov.br/)
