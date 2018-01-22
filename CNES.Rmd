@@ -1,6 +1,5 @@
 ---
-title: "CNES - Brazilian Health Establishments"
-author: "Mauricio Collaça"
+title: "CNES - Brazilian public health establishments"
 date: "January 22, 2018"
 output: html_document
 ---
@@ -32,9 +31,6 @@ motivoDesativacao <- fread("./data/tbMotivoDesativacao201712.csv", stringsAsFact
 naturezaJuridica <- fread("./data/tbNaturezaJuridica201712.csv", stringsAsFactors = FALSE, data.table=FALSE)
 ```
 
----
-
-Click on circles to zoom in clusters
 ```{r}
 north <- 5+16/60
 south <- -33+45/60
@@ -60,7 +56,7 @@ mapData <- estabelecimento %>%
 
 ```{r}
 mapData %>%
-  leaflet(width=1024, height=768) %>%
+  leaflet(width=900, height=600) %>%
   addTiles() %>%
   addMarkers(lng = ~lng, lat = ~lat, popup = ~popup, clusterOptions = markerClusterOptions())
 ```
